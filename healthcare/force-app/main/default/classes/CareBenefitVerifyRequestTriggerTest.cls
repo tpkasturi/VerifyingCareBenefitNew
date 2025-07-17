@@ -42,12 +42,15 @@ public class CareBenefitVerifyRequestTriggerTest {
         Account patient = [SELECT Id FROM Account WHERE LastName = 'Doe' LIMIT 1];
         Account provider = [SELECT Id FROM Account WHERE LastName = 'Smith' LIMIT 1];
         
+        Test.startTest();
         CareBenefitVerifyRequest request = new CareBenefitVerifyRequest(
             PayerId = patient.Id,
             ProviderId = provider.Id,
             MemberPlanId = memberPlan.Id
         );
         insert request;
+        Test.stopTest();
+        
         CareBenefitVerifyRequest updatedReq = [SELECT Id, Status, StatusReason FROM CareBenefitVerifyRequest LIMIT 1];
         System.assertEquals('Acknowledged', updatedReq.Status);
         System.assert(updatedReq.StatusReason.contains('successfully sent'));
@@ -60,12 +63,14 @@ public class CareBenefitVerifyRequestTriggerTest {
         Account patient = [SELECT Id FROM Account WHERE LastName = 'Doe' LIMIT 1];
         Account provider = [SELECT Id FROM Account WHERE LastName = 'Smith' LIMIT 1];
         
+        Test.startTest();
         CareBenefitVerifyRequest request = new CareBenefitVerifyRequest(
             PayerId = patient.Id,
             ProviderId = provider.Id,
             MemberPlanId = memberPlan.Id
         );
         insert request;
+        Test.stopTest();
         
         CareBenefitVerifyRequest updatedReq = [SELECT Id, Status, StatusReason FROM CareBenefitVerifyRequest LIMIT 1];
         System.assertEquals(null, updatedReq.Status);
