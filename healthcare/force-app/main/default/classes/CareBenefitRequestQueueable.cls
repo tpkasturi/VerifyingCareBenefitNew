@@ -11,8 +11,8 @@ public class CareBenefitRequestQueueable implements Queueable, Database.AllowsCa
     public void execute(QueueableContext context) {
         List<CareBenefitVerifyRequest> requestList = [SELECT Id, Payer.FirstName, Payer.LastName, Payer.PersonBirthdate, 
                                 						 Payer.PersonGender, MemberPlan.Name, MemberPlan.GroupNumber, 
-                                                         MemberPlan.SubscriberId, MemberPlan.Payer.Name, MemberPlan.Plan.PlanNumber, 
-                                                         Provider.FirstName, Provider.LastName, ProviderId  
+                                                         MemberPlan.SubscriberId, MemberPlan.Payer.Name, MemberPlan.Plan.PlanNumber, MemberPlan.Plan.ServiceType,
+                                                         Provider.FirstName, Provider.LastName, ProviderId, MemberPlan.Plan.EffectiveFrom, MemberPlan.Plan.EffectiveTo  
                                                          FROM CareBenefitVerifyRequest WHERE Id IN:requestIds];
 
         for (CareBenefitVerifyRequest req : requestList) {
@@ -33,6 +33,11 @@ public class CareBenefitRequestQueueable implements Queueable, Database.AllowsCa
                     'npi'        => req.ProviderId,
                     'firstName'  => req.Provider.FirstName,
                     'lastName'   => req.Provider.LastName
+                },
+               'service' => new Map<String, Object>{
+                    'dateTo'    => req.MemberPlan.Plan.EffectiveTo,
+                    'dateFrom'  => req.MemberPlan.Plan.EffectiveFrom,
+                    'type'      => req.MemberPlan.Plan.ServiceType
                 }
             };
 
